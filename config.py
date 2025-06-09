@@ -1,0 +1,1 @@
+ticker_symbols = ['MSFT', 'NVDA', 'AAPL', 'AMZN', 'GOOG']
