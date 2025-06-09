@@ -19,7 +19,7 @@ def main():
 
         # extract data
 
-        data = pd.read_csv(f'by_stock/{ticker}.csv')
+        data = pd.read_csv(f'data/by_stock/{ticker}.csv')
 
         # split data
 

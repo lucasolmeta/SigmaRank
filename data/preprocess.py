@@ -12,7 +12,7 @@ def main():
 
     # extract SPY data
 
-    spy_data = pd.read_csv('by_stock/SPY.csv')
+    spy_data = pd.read_csv('data/by_stock/SPY.csv')
     spy_data['date'] = pd.to_datetime(spy_data['Date'])
 
     # SPY lagged return features
@@ -38,7 +38,7 @@ def main():
 
         # extract pulled data
 
-        data = pd.read_csv(f'by_stock/{ticker}.csv')
+        data = pd.read_csv(f'data/by_stock/{ticker}.csv')
 
         # merge df with SPY df to include SPY data
 
@@ -105,7 +105,7 @@ def main():
 
         # save finalized data to csv
 
-        data.to_csv(f'by_stock/{ticker}.csv')
+        data.to_csv(f'data/by_stock/{ticker}.csv')
 
         print(f'Feature engineering performed on {ticker}')
 
