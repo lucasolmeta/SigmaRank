@@ -26,5 +26,7 @@ def main():
     data = yf.download('SPY', period='max', interval='1d')
     df.to_csv(f'by_stock/SPY.csv')
 
+    print(f'Data obtained for {ticker}')
+
 if __name__ == "__main__":
     main()

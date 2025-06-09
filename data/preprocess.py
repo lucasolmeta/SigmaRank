@@ -98,12 +98,17 @@ def main():
 
         data.drop(columns=['Date','Close','High','Low','Open','Volume','date'], inplace=True)
 
+        feature_columns = data.columns.difference(['target_daily_return'])
+        data = data.dropna(subset=feature_columns)
+
         data.dropna(inplace=True)
         data.reset_index(drop=True, inplace=True)
 
         # save finalized data to csv
 
         data.to_csv(f'by_stock/{ticker}.csv')
+
+        print(f'Feature engineering performed on {ticker}')
 
 if __name__ == "__main__":
     main()
