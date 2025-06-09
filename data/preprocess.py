@@ -99,9 +99,8 @@ def main():
         data.drop(columns=['Date','Close','High','Low','Open','Volume','date'], inplace=True)
 
         feature_columns = data.columns.difference(['target_daily_return'])
-        data = data.dropna(subset=feature_columns)
+        data.dropna(subset=feature_columns, inplace=True)
 
-        data.dropna(inplace=True)
         data.reset_index(drop=True, inplace=True)
 
         # save finalized data to csv

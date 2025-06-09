@@ -23,7 +23,6 @@ def main():
 
             print(f'Data obtained for {ticker}')
 
-
     # fetch and save SPY data
 
     data = yf.download('SPY', period='max', interval='1d')
