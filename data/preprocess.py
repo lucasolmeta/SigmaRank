@@ -1,62 +1,105 @@
 import sys
 import os
 import pandas as pd
-from ta import add_all_ta_features
+from ta.volume import on_balance_volume
+from ta.trend import sma_indicator
 
-sys.path.append(os.path.abspath('..'))
+# get ticker symbol list
+
+sys.path.append(os.path.abspath('../'))
 from config import ticker_symbols
 
+# extract SPY data
+
 spy_data = pd.read_csv('by_stock/SPY.csv')
-spy_data['Date'] = pd.to_datetime(spy_data['Date'])
+spy_data['date'] = pd.to_datetime(spy_data['Date'])
 
-spy_data['SPY_1_day_lagged_return_%'] = spy_data['Close'].shift(1) / spy_data['Close'].shift(2) - 1
-spy_data['SPY_3_day_lagged_return_%'] = spy_data['Close'].shift(1) / spy_data['Close'].shift(4) - 1
-spy_data['SPY_5_day_lagged_return_%'] = spy_data['Close'].shift(1) / spy_data['Close'].shift(6) - 1
+# SPY lagged return features
 
-spy_data['SPY_1_day_lagged_return_$'] = spy_data['Close'].shift(1) - spy_data['Close'].shift(2)
-spy_data['SPY_3_day_lagged_return_$'] = spy_data['Close'].shift(1) - spy_data['Close'].shift(4)
-spy_data['SPY_5_day_lagged_return_$'] = spy_data['Close'].shift(1) - spy_data['Close'].shift(6)
+spy_data['SPY_1d_lagged_return'] = spy_data['Close'].shift(1) / spy_data['Close'].shift(2) - 1
+spy_data['SPY_3d_lagged_return'] = spy_data['Close'].shift(1) / spy_data['Close'].shift(4) - 1
+spy_data['SPY_5d_lagged_return'] = spy_data['Close'].shift(1) / spy_data['Close'].shift(6) - 1
+
+# only include relevant SPY features
 
 spy_features = spy_data[[
-    'Date',
-    'SPY_1_day_lagged_return_%',
-    'SPY_3_day_lagged_return_%',
-    'SPY_5_day_lagged_return_%',
-    'SPY_1_day_lagged_return_$',
-    'SPY_3_day_lagged_return_$',
-    'SPY_5_day_lagged_return_$'
+    'date',
+    'SPY_1d_lagged_return',
+    'SPY_3d_lagged_return',
+    'SPY_5d_lagged_return',
 ]]
 
 for ticker in ticker_symbols:
 
+    ###########################
+    ### FEATURE ENGINEERING ###
+    ###########################
+
+    # extract pulled data
+
     data = pd.read_csv(f'by_stock/{ticker}.csv')
-    data['Date'] = pd.to_datetime(data['Date'])
+
+    # merge df with SPY df to include SPY data
+
+    data['date'] = pd.to_datetime(data['Date'])
+    data = pd.merge(data, spy_features, on='date', how='left')
+
+    # drop incomplete observations
 
     data.dropna(inplace=True)
 
-    data['PreviousClose'] = data['Close'].shift(1)
+    # target feature (tomorrow's daily return)
 
-    data['1_day_lagged_return_%'] = data['Close'].shift(1) / data['Close'].shift(2) - 1
-    data['3_day_lagged_return_%'] = data['Close'].shift(1) / data['Close'].shift(4) - 1
-    data['5_day_lagged_return_%'] = data['Close'].shift(1) / data['Close'].shift(6) - 1
+    data['target_daily_return'] = data['Close'].shift(-1) / data['Close'] - 1
 
-    data['1_day_lagged_return_$'] = data['Close'].shift(1) - data['Close'].shift(2)
-    data['3_day_lagged_return_$'] = data['Close'].shift(1) - data['Close'].shift(4)
-    data['5_day_lagged_return_$'] = data['Close'].shift(1) - data['Close'].shift(6)
+    # previous day features
+ 
+    data['previous_close'] = data['Close'].shift(1)
+    data['previous_volume'] = data['Volume'].shift(1)
 
-    data = pd.merge(data, spy_features, on='Date', how='left')
+    # lagged return features
 
-    '''data = add_all_ta_features(
-        data,
-        open="Open",
-        high="High",
-        low="Low",
-        close="Close",
-        volume="Volume",
-        fillna=True
-    )'''
+    data['1d_lagged_return'] = data['Close'].shift(1) / data['Close'].shift(2) - 1
+    data['3d_lagged_return'] = data['Close'].shift(1) / data['Close'].shift(4) - 1
+    data['5y_lagged_return'] = data['Close'].shift(1) / data['Close'].shift(6) - 1
+
+    # rolling average features
+
+    data['rolling_avg_return_3d'] = data['target_daily_return'].rolling(3).mean()
+    data['rolling_avg_return_5d'] = data['target_daily_return'].rolling(5).mean()
+
+    # min / max return features
+
+    data['max_return_last_5d'] = data['target_daily_return'].rolling(5).max()
+    data['min_return_last_5d'] = data['target_daily_return'].rolling(5).min()
+
+    # volatility related features
+
+    data['volatility_5d'] = data['Close'].pct_change().shift(1).rolling(5).std()
+    data['max_drawdown_5d'] = data['Close'].rolling(5).apply(lambda x: (x.max() - x.min()) / x.max())
+
+    # volumn related features
+
+    avg_volume_10 = data['Volume'].shift(2).rolling(10).mean()
+    data['volume_spike_ratio'] = data['Volume'].shift(1) / avg_volume_10
+    data['obv_lagged'] = on_balance_volume(data['Close'], data['Volume']).shift(1)
+
+    # return relative to SPY feature
+
+    data['relative_3d_return'] = data['3d_lagged_return'] - data['SPY_3d_lagged_return']
+
+    # sma10 features
+
+    data['price_vs_sma10_ratio'] = data['previous_close'] / sma_indicator(data['previous_close'], window=10)
+    data['sma5_vs_sma10_ratio'] = sma_indicator(data['previous_close'], window=5) / sma_indicator(data['previous_close'], window=10)
+
+    # drop unnecessary features and incomplete observations and reset observation indeces
+
+    data.drop(columns=['Date','Close','High','Low','Open','Volume','date'], inplace=True)
 
     data.dropna(inplace=True)
     data.reset_index(drop=True, inplace=True)
+
+    # save finalized data to csv
 
     data.to_csv(f'by_stock/{ticker}.csv')
