@@ -64,16 +64,6 @@ def main():
         data['3d_lagged_return'] = data['Close'].shift(1) / data['Close'].shift(4) - 1
         data['5y_lagged_return'] = data['Close'].shift(1) / data['Close'].shift(6) - 1
 
-        # rolling average features
-
-        data['rolling_avg_return_3d'] = data['target_daily_return'].rolling(3).mean()
-        data['rolling_avg_return_5d'] = data['target_daily_return'].rolling(5).mean()
-
-        # min / max return features
-
-        data['max_return_last_5d'] = data['target_daily_return'].rolling(5).max()
-        data['min_return_last_5d'] = data['target_daily_return'].rolling(5).min()
-
         # volatility related features
 
         data['volatility_5d'] = data['Close'].pct_change().shift(1).rolling(5).std()
@@ -83,7 +73,6 @@ def main():
 
         avg_volume_10 = data['Volume'].shift(2).rolling(10).mean()
         data['volume_spike_ratio'] = data['Volume'].shift(1) / avg_volume_10
-        data['obv_lagged'] = on_balance_volume(data['Close'], data['Volume']).shift(1)
 
         # return relative to SPY feature
 
