@@ -39,7 +39,7 @@ MrktMove/
 │   ├── model.py                # Regression model training/prediction
 │   ├── visualize.py            # Plots predicted returns
 │
-├── MM-DD-YYY-predictions.csv   # Output file
+├── MM-DD-YYY-predictions.csv   # Daily output file
 ├── README.md                   # This file
 ```
 
