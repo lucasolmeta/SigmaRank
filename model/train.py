@@ -5,8 +5,11 @@ import pandas as pd
 from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 
+
 def main():
     # get ticker symbol list
+
+    console = Console()
 
     sys.path.append(os.path.abspath('../'))
     from config import ticker_symbols
@@ -41,6 +44,8 @@ def main():
         # predict
 
         y_pred = model.predict(X_test)
-        result = y_pred[0]*100
+        result = y_pred[0]
+        per_result = result * 100
+        final = round(per_result, 2)
 
-        print(f'Tomorrows predited return for {ticker}: {round(result,2)}%')
+        print(f'Tomorrows predicted return for {ticker}: ' + str(final) + '%')

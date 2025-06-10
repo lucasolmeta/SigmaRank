@@ -2,6 +2,7 @@ import yfinance as yf
 import sys
 import os
 import pandas as pd
+import shutil
 
 def main():
     # get ticker symbol list
@@ -12,7 +13,12 @@ def main():
     # fetch requested ticker data
 
     data = yf.download(ticker_symbols, period='max', interval='1d')
-    os.makedirs('data/by_stock', exist_ok=True)
+
+    if os.path.exists('data/by_stock'):
+        shutil.rmtree('data/by_stock')
+        os.makedirs('data/by_stock')
+    else:
+        os.makedirs('data/by_stock', exist_ok=True)
 
     # split each ticker into it's own file
 

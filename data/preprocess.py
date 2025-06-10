@@ -24,7 +24,6 @@ def main():
     empty_row['Date'] = next_date
 
     spy_data = pd.concat([spy_data, empty_row], ignore_index=True)
-    #spy_data.set_index('Date', inplace=True)
 
     # SPY lagged return features
 

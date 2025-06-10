@@ -1,8 +1,11 @@
 ticker_symbols = [
-    'HYG',
-    'MLNK',
-    'VOO',
-    'NFLX',
-    'SSO'
+    ###################################
+    ### PLACE DESIRED TICKERS BELOW ###
+    ###################################
+
+    'AAPL',
+    'MSFT',
+    'GOOG'
+
     #DO NOT REMOVE SPY TICKER
     ,'SPY']
