@@ -110,6 +110,9 @@ def main():
 
     predictions.reset_index(drop=True, inplace=True)
 
+    if not os.path.exists('results'):
+        os.makedirs('results', exist_ok=True)
+
     predictions.to_csv(f'results/{date}-results.csv')
 
 if __name__ == '__main__':
