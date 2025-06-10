@@ -1,6 +1,6 @@
 from data import fetch
 from data import preprocess
-from model import train
+from model import model
 
 def main():
     fetch.main()
@@ -9,7 +9,7 @@ def main():
     preprocess.main()
     print('PREPROCESSING COMPLETE')
 
-    train.main()
+    model.main()
     print('TRAINING COMPLETE')
 
 if __name__ == '__main__':

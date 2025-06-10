@@ -10,9 +10,15 @@ def main():
     sys.path.append(os.path.abspath('..'))
     from config import ticker_symbols
 
+    #####################
+    ### DATA FETCHING ###
+    #####################
+
     # fetch requested ticker data
 
     data = yf.download(ticker_symbols, period='max', interval='1d')
+
+    # clear / create directory
 
     if os.path.exists('data/by_stock'):
         shutil.rmtree('data/by_stock')

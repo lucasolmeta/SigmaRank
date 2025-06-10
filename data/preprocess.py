@@ -20,6 +20,8 @@ def main():
     last_date = spy_data['Date'].max()
     next_date = last_date + BDay(1)
 
+    # append prediction row to SPY df
+
     empty_row = pd.DataFrame({col: [pd.NA] for col in spy_data.columns})
     empty_row['Date'] = next_date
 
@@ -51,6 +53,8 @@ def main():
         data = pd.read_csv(f'data/by_stock/{ticker}.csv')
         data['Date'] = pd.to_datetime(data['Date'])
 
+        # append prediction row to ticker df
+
         last_date = data['Date'].max()
         next_date = last_date + BDay(1)
 
@@ -59,7 +63,7 @@ def main():
 
         data = pd.concat([data, empty_row], ignore_index=True)
 
-        # merge df with SPY df to include SPY data
+        # merge df with SPY df
 
         data = pd.merge(data, spy_features, on='Date', how='left')
 
