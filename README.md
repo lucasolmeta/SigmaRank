@@ -4,14 +4,20 @@
 
 # 📈 MrktMove
 
-**MrktMove** is a real-time machine learning system that predicts how much a stock will change tomorrow using regression models. It can be run at any time, by anyone at real time to predict returns in real time.
+**MrktMove** is a real-time machine learning system that predicts how much a stock will change tomorrow using regression and classification models. It can be run at any time, by anyone to predict returns in real time. 
+
+---
+
+# ⚠️ Disclaimer
+
+**Use at your own risk. Returns are never guaranteed and investing involves risk!**
 
 ---
 
 ## 🧠 Project Summary
 
-- **Goal:** Predict the **magnitude of next-day stock returns**
-- **Model Type:** Regression (Gradient Boost)
+- **Goal:** Predict the **magnitude of next-day stock returns** and use it to make **curated stock recommendations**
+- **Model Type:** Regression (Gradient Boost), Classification (Gradient Boost)
 
 ---
 
@@ -20,20 +26,21 @@
 ```
 MrktMove/
 │
-├── main.py                # Runs entire daily pipeline (fetch → preprocess → predict)
-├── config.py              # Store ticker list
+├── main.py                     # Runs entire daily pipeline (fetch → preprocess → predict)
+├── config.py                   # Store ticker list
 │
 ├── data/
-│   ├── fetch.py           # Pulls historical OHLCV data from yfinance
-│   ├── preprocess.py      # Builds features + return targets
-│   ├── by_stock/          # Stores per-ticker training data
-│   │   ├── TICKER.csv     # Features and returns for a given ticker
+│   ├── fetch.py                # Pulls historical OHLCV data from yfinance
+│   ├── preprocess.py           # Builds features + return targets
+│   ├── by_stock/               # Stores per-ticker training data
+│   │   ├── TICKER.csv          # Features and returns for a given ticker
 │
 ├── model/
-│   ├── model.py           # Regression model training/prediction
-│   ├── visualize.py       # Plots predicted returns
+│   ├── model.py                # Regression model training/prediction
+│   ├── visualize.py            # Plots predicted returns
 │
-├── README.md              # This file
+├── MM-DD-YYY-predictions.csv   # Daily output file
+├── README.md                   # This file
 ```
 
 ---
@@ -48,9 +55,9 @@ MrktMove/
 
 ## 🧠 Model Details
 
-- **Model type:** Regression (not classification)
+- **Model type:** Regression and Classification
 - **Output:** Predicted next-day % return  
-- **Modeling tool:** `XGBRegressor`
+- **Modeling tool:** `XGBRegressor`, `XGBClassifier`
 
 ---
 
@@ -61,6 +68,9 @@ MrktMove/
 - `yfinance`
 - `ta` (technical indicators)
 - `xgboost`
+- `sci-kit learn`
+- `numpy`
+- `joblib`
 
 Install everything:
 ```bash
