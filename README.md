@@ -4,14 +4,20 @@
 
 # 📈 MrktMove
 
-**MrktMove** is a real-time machine learning system that predicts how much a stock will change tomorrow using regression models. It can be run at any time, by anyone at real time to predict returns in real time.
+**MrktMove** is a real-time machine learning system that predicts how much a stock will change tomorrow using regression models. It can be run at any time, by anyone at real time to predict returns in real time. 
+
+---
+
+# ⚠️ Disclaimer
+
+**Use at your own risk. Returns are never guaranteed and investing involves risk!**
 
 ---
 
 ## 🧠 Project Summary
 
-- **Goal:** Predict the **magnitude of next-day stock returns**
-- **Model Type:** Regression (Gradient Boost)
+- **Goal:** Predict the **magnitude of next-day stock returns** and use it to make **curated stock recommendations**
+- **Model Type:** Regression (Gradient Boost), Classification (Gradient Boost)
 
 ---
 
@@ -33,6 +39,7 @@ MrktMove/
 │   ├── model.py           # Regression model training/prediction
 │   ├── visualize.py       # Plots predicted returns
 │
+├── results.csv            # Output file
 ├── README.md              # This file
 ```
 
@@ -61,6 +68,9 @@ MrktMove/
 - `yfinance`
 - `ta` (technical indicators)
 - `xgboost`
+- `sci-kit learn`
+- `numpy`
+- `joblib`
 
 Install everything:
 ```bash
