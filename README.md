@@ -17,10 +17,11 @@
 
 ## 🧱 Project Structure
 
+```
 MrktMove/
 │
 ├── main.py                # Runs entire daily pipeline (fetch → preprocess → predict)
-├── config.py              # Ticker list and global settings
+├── config.py              # Store ticker list
 │
 ├── data/
 │   ├── fetch.py           # Pulls historical OHLCV data from yfinance
@@ -32,10 +33,8 @@ MrktMove/
 │   ├── model.py           # Regression model training/prediction
 │   ├── visualize.py       # Plots predicted returns
 │
-├── logs/
-│   ├── trades_YYYY-MM.csv # Daily simulated trade logs
-│
 ├── README.md              # This file
+```
 
 ---
 
