@@ -110,7 +110,7 @@ def main():
 
     predictions.reset_index(drop=True, inplace=True)
 
-    predictions.to_csv(f'{date}-results.csv')
+    predictions.to_csv(f'results/{date}-results.csv')
 
 if __name__ == '__main__':
     main() 

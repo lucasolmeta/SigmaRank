@@ -50,13 +50,14 @@ MrktMove/
 1. Run `main.py` daily before market opens.
 2. Fetch the latest data up to yesterday’s close.
 3. Predict next-day return for each stock.
+4. Store results in dedicated '-.csv' file.
 
 ---
 
 ## 🧠 Model Details
 
 - **Model type:** Regression and Classification
-- **Output:** Predicted next-day % return  
+- **Output:** Predicted next-day % return
 - **Modeling tool:** `XGBRegressor`, `XGBClassifier`
 
 ---
