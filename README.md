@@ -50,9 +50,6 @@ MrktMove/
 
 - **Model type:** Regression (not classification)
 - **Output:** Predicted next-day % return  
-  \[
-  r_{t+1} = \frac{\text{Close}_{t+1} - \text{Close}_t}{\text{Close}_t}
-  \]
 - **Modeling tool:** `XGBRegressor`
 
 ---
