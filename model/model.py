@@ -77,7 +77,7 @@ def main():
         
         if certainty > 0.5:
             result = '+'
-            if certainty > 0.8:
+            if certainty > 0.7:
                 recommendation = 'Buy'
             else:
                 recommendation = 'Refrain'
