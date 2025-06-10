@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from ta.trend import sma_indicator
 from pandas.tseries.offsets import BDay
+import numpy as np
 
 
 def main():
@@ -21,10 +22,10 @@ def main():
 
     # append prediction row to SPY df
 
-    empty_row = pd.DataFrame({col: [pd.NA] for col in spy_data.columns})
-    empty_row['Date'] = next_date
+    new_row = {col: np.nan for col in spy_data.columns}
+    new_row['Date'] = pd.to_datetime(next_date)
 
-    spy_data = pd.concat([spy_data, empty_row], ignore_index=True)
+    spy_data.loc[len(spy_data)] = new_row
 
     # SPY lagged return features
 
@@ -57,18 +58,19 @@ def main():
         last_date = data['Date'].max()
         next_date = last_date + BDay(1)
 
-        empty_row = pd.DataFrame({col: [pd.NA] for col in data.columns})
-        empty_row['Date'] = next_date
-
-        data = pd.concat([data, empty_row], ignore_index=True)
+        new_row = {col: np.nan for col in data.columns}
+        new_row['Date'] = pd.to_datetime(next_date)
+    
+        data.loc[len(data)] = new_row
 
         # merge df with SPY df
 
         data = pd.merge(data, spy_features, on='Date', how='left')
 
-        # target feature (tomorrow's daily return)
+        # target features (tomorrow's daily return and result)
 
         data['target_daily_return'] = data['Close'] / data['Close'].shift(1) - 1
+        data['target_daily_result'] = (data['target_daily_return'] > 0).astype(int)
 
         # previous day features
  
@@ -109,8 +111,6 @@ def main():
         # save finalized data to csv
 
         data.to_csv(f'data/by_stock/{ticker}.csv')
-
-        print(f'Feature engineering performed on {ticker}')
 
 if __name__ == '__main__':
     main()

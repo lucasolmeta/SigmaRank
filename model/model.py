@@ -1,4 +1,4 @@
-from xgboost import XGBRegressor
+from xgboost import XGBClassifier, XGBRegressor
 import sys
 import os
 import pandas as pd
@@ -9,11 +9,9 @@ def main():
     sys.path.append(os.path.abspath('../'))
     from config import ticker_symbols
 
-    for ticker in ticker_symbols:
+    predictions = pd.DataFrame(columns=['Ticker','Predicted Outcome','Outcome Certainty','Predicted Return','Recommendation','Previous Close','Predicted Close'])
 
-        ######################
-        ### MODEL TRAINING ###
-        ######################
+    for ticker in ticker_symbols:
 
         if ticker == 'SPY':
             continue
@@ -22,9 +20,13 @@ def main():
 
         data = pd.read_csv(f'data/by_stock/{ticker}.csv')
 
+        #################################
+        ### REGRESSION MODEL TRAINING ###
+        #################################
+
         # split test and prediction data
 
-        feature_columns = data.columns.difference(['target_daily_return','Date'])
+        feature_columns = data.columns.difference(['target_daily_return','target_daily_result','Date'])
 
         train, test = data.iloc[:-1].copy(), data.iloc[-1:].copy()
 
@@ -38,9 +40,64 @@ def main():
 
         # predict
 
-        y_pred = model.predict(X_test)
-        result = y_pred[0]
-        percent_result = result * 100
-        formatted_result = round(percent_result, 2)
+        pred_return = model.predict(X_test)
+        pred_return = pred_return[0] * 100
 
-        print(f'Tomorrows predicted return for {ticker}: ' + str(formatted_result) + '%')
+        # interpret results
+        
+        previous_close = float(data.iloc[-1]['previous_close'])
+        pred_close = previous_close * (pred_return/100 + 1)
+
+        #####################################
+        ### CLASSIFICATION MODEL TRAINING ###
+        #####################################
+
+        # split test and prediction data
+
+        feature_columns = data.columns.difference(['target_daily_return','target_daily_result','Date'])
+
+        train, test = data.iloc[:-1].copy(), data.iloc[-1:].copy()
+
+        X_train, y_train = train[feature_columns], train['target_daily_result']
+        X_test = test[feature_columns]
+
+        # fit model
+
+        model = XGBClassifier(n_estimators=100, max_depth=3, learning_rate=0.1)
+        model.fit(X_train, y_train)
+
+        # predict
+
+        probs = model.predict_proba(X_test)
+        certainty = probs[:, 1][0]
+
+        # interpret results
+
+        result, recommendation = '',''
+        
+        if certainty > 0.5:
+            result = '+'
+            if certainty > 0.8:
+                recommendation = 'Buy'
+            else:
+                recommendation = 'Refrain'
+        else:
+            result = '-'
+            recommendation = 'Refrain'
+            certainty = 1 - certainty
+
+        ####################
+        ### SAVE RESULTS ###
+        ####################
+        
+        predictions.loc[len(predictions)] = {
+            'Ticker': ticker,
+            'Predicted Outcome': result,
+            'Outcome Certainty': certainty,
+            'Predicted Return': pred_return,
+            'Recommendation': recommendation,
+            'Previous Close': float(previous_close),
+            'Predicted Close': float(pred_close)
+        }
+
+    predictions.to_csv('results.csv')

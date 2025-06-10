@@ -33,7 +33,5 @@ def main():
             df = data.xs(ticker, axis=1, level=1, drop_level=False).droplevel(1, axis=1)
             df.to_csv(f'data/by_stock/{ticker}.csv')
 
-            print(f'Data obtained for {ticker}')
-
 if __name__ == '__main__':
     main()

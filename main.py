@@ -4,13 +4,12 @@ from model import model
 
 def main():
     fetch.main()
-    print('DATA OBTAINED')
 
     preprocess.main()
-    print('PREPROCESSING COMPLETE')
 
     model.main()
-    print('TRAINING COMPLETE')
+
+    print('Model results outputted successfully!')
 
 if __name__ == '__main__':
     main() 
