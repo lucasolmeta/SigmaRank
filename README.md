@@ -4,7 +4,7 @@
 
 # 📈 MrktMove
 
-**MrktMove** is a real-time machine learning system that predicts how much a stock will change tomorrow using regression models. It can be run at any time, by anyone at real time to predict returns in real time. 
+**MrktMove** is a real-time machine learning system that predicts how much a stock will change tomorrow using regression and classification models. It can be run at any time, by anyone to predict returns in real time. 
 
 ---
 
@@ -55,9 +55,9 @@ MrktMove/
 
 ## 🧠 Model Details
 
-- **Model type:** Regression (not classification)
+- **Model type:** Regression and Classification
 - **Output:** Predicted next-day % return  
-- **Modeling tool:** `XGBRegressor`
+- **Modeling tool:** `XGBRegressor`, `XGBClassifier`
 
 ---
 
