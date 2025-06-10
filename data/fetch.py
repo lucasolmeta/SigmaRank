@@ -23,10 +23,5 @@ def main():
 
             print(f'Data obtained for {ticker}')
 
-    # fetch and save SPY data
-
-    data = yf.download('SPY', period='max', interval='1d')
-    df.to_csv(f'data/by_stock/SPY.csv')
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

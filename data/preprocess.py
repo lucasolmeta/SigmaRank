@@ -3,6 +3,8 @@ import os
 import pandas as pd
 from ta.volume import on_balance_volume
 from ta.trend import sma_indicator
+from pandas.tseries.offsets import BDay
+
 
 def main():
     # get ticker symbol list
@@ -13,7 +15,16 @@ def main():
     # extract SPY data
 
     spy_data = pd.read_csv('data/by_stock/SPY.csv')
-    spy_data['date'] = pd.to_datetime(spy_data['Date'])
+    spy_data['Date'] = pd.to_datetime(spy_data['Date'])
+
+    last_date = spy_data['Date'].max()
+    next_date = last_date + BDay(1)
+
+    empty_row = pd.DataFrame({col: [pd.NA] for col in spy_data.columns})
+    empty_row['Date'] = next_date
+
+    spy_data = pd.concat([spy_data, empty_row], ignore_index=True)
+    #spy_data.set_index('Date', inplace=True)
 
     # SPY lagged return features
 
@@ -24,7 +35,7 @@ def main():
     # only include relevant SPY features
 
     spy_features = spy_data[[
-        'date',
+        'Date',
         'SPY_1d_lagged_return',
         'SPY_3d_lagged_return',
         'SPY_5d_lagged_return',
@@ -39,19 +50,23 @@ def main():
         # extract pulled data
 
         data = pd.read_csv(f'data/by_stock/{ticker}.csv')
+        data['Date'] = pd.to_datetime(data['Date'])
+
+        last_date = data['Date'].max()
+        next_date = last_date + BDay(1)
+
+        empty_row = pd.DataFrame({col: [pd.NA] for col in data.columns})
+        empty_row['Date'] = next_date
+
+        data = pd.concat([data, empty_row], ignore_index=True)
 
         # merge df with SPY df to include SPY data
 
-        data['date'] = pd.to_datetime(data['Date'])
-        data = pd.merge(data, spy_features, on='date', how='left')
-
-        # drop incomplete observations
-
-        data.dropna(inplace=True)
+        data = pd.merge(data, spy_features, on='Date', how='left')
 
         # target feature (tomorrow's daily return)
 
-        data['target_daily_return'] = data['Close'].shift(-1) / data['Close'] - 1
+        data['target_daily_return'] = data['Close'] / data['Close'].shift(1) - 1
 
         # previous day features
  
@@ -66,8 +81,7 @@ def main():
 
         # volatility related features
 
-        data['volatility_5d'] = data['Close'].pct_change().shift(1).rolling(5).std()
-        data['max_drawdown_5d'] = data['Close'].rolling(5).apply(lambda x: (x.max() - x.min()) / x.max())
+        data['volatility_5d'] = data['Close'].pct_change(fill_method=None).shift(1).rolling(5).std()
 
         # volumn related features
 
@@ -83,14 +97,12 @@ def main():
         data['price_vs_sma10_ratio'] = data['previous_close'] / sma_indicator(data['previous_close'], window=10)
         data['sma5_vs_sma10_ratio'] = sma_indicator(data['previous_close'], window=5) / sma_indicator(data['previous_close'], window=10)
 
-        # drop unnecessary features and incomplete observations and reset observation indeces
+        # drop unnecessary features and incomplete observations
 
-        data.drop(columns=['Date','Close','High','Low','Open','Volume','date'], inplace=True)
+        data.drop(columns=['Close','High','Low','Open','Volume'], inplace=True)
 
         feature_columns = data.columns.difference(['target_daily_return'])
         data.dropna(subset=feature_columns, inplace=True)
-
-        data.reset_index(drop=True, inplace=True)
 
         # save finalized data to csv
 
@@ -98,5 +110,5 @@ def main():
 
         print(f'Feature engineering performed on {ticker}')
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

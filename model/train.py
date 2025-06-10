@@ -17,18 +17,21 @@ def main():
         ### MODEL TRAINING ###
         ######################
 
+        if ticker == 'SPY':
+            continue
+
         # extract data
 
         data = pd.read_csv(f'data/by_stock/{ticker}.csv')
 
         # split data
 
-        feature_columns = data.columns.difference(['target_daily_return'])
+        feature_columns = data.columns.difference(['target_daily_return','Date'])
 
-        train, test = data.iloc[:-60].copy(), data.iloc[-60:].copy()
+        train, test = data.iloc[:-1].copy(), data.iloc[-1:].copy()
 
         X_train, y_train = train[feature_columns], train['target_daily_return']
-        X_test, y_test = test[feature_columns], test['target_daily_return']
+        X_test = test[feature_columns]
 
         # train model
 
@@ -38,11 +41,6 @@ def main():
         # predict
 
         y_pred = model.predict(X_test)
+        result = y_pred[0]*100
 
-        # evaluate
-
-        rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-        r2 = r2_score(y_test, y_pred)
-
-        print(f'{ticker} RMSE: {rmse:.5f}')
-        print(f'{ticker} R² Score: {r2:.3f}')
+        print(f'Tomorrows predited return for {ticker}: {round(result,2)}%')

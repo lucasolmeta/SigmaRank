@@ -1,1 +1,8 @@
-ticker_symbols = ['MSFT', 'NVDA', 'AAPL', 'AMZN', 'GOOG']
+ticker_symbols = [
+    'HYG',
+    'MLNK',
+    'VOO',
+    'NFLX',
+    'SSO'
+    #DO NOT REMOVE SPY TICKER
+    ,'SPY']
