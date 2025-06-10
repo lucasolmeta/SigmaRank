@@ -1,7 +1,6 @@
 import sys
 import os
 import pandas as pd
-from ta.volume import on_balance_volume
 from ta.trend import sma_indicator
 from pandas.tseries.offsets import BDay
 
