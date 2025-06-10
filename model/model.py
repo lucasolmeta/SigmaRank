@@ -22,7 +22,6 @@ def main():
 
         date = str(data.iloc[-1]['Date'])
 
-
         #################################
         ### REGRESSION MODEL TRAINING ###
         #################################
