@@ -20,6 +20,9 @@ def main():
 
         data = pd.read_csv(f'data/by_stock/{ticker}.csv')
 
+        date = str(data.iloc[-1]['Date'])
+
+
         #################################
         ### REGRESSION MODEL TRAINING ###
         #################################
@@ -100,4 +103,4 @@ def main():
             'Predicted Close': float(pred_close)
         }
 
-    predictions.to_csv('results.csv')
+    predictions.to_csv(f'{date}-results.csv')
