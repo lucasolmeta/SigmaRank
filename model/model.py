@@ -102,4 +102,15 @@ def main():
             'Predicted Close': float(pred_close)
         }
 
+    predictions.sort_values(
+        by=['Recommendation', 'Predicted Return'],
+        ascending=[True, False],
+        inplace=True
+    )
+
+    predictions.reset_index(drop=True, inplace=True)
+
     predictions.to_csv(f'{date}-results.csv')
+
+if __name__ == '__main__':
+    main() 
