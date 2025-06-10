@@ -26,21 +26,21 @@
 ```
 MrktMove/
 │
-├── main.py                # Runs entire daily pipeline (fetch → preprocess → predict)
-├── config.py              # Store ticker list
+├── main.py                     # Runs entire daily pipeline (fetch → preprocess → predict)
+├── config.py                   # Store ticker list
 │
 ├── data/
-│   ├── fetch.py           # Pulls historical OHLCV data from yfinance
-│   ├── preprocess.py      # Builds features + return targets
-│   ├── by_stock/          # Stores per-ticker training data
-│   │   ├── TICKER.csv     # Features and returns for a given ticker
+│   ├── fetch.py                # Pulls historical OHLCV data from yfinance
+│   ├── preprocess.py           # Builds features + return targets
+│   ├── by_stock/               # Stores per-ticker training data
+│   │   ├── TICKER.csv          # Features and returns for a given ticker
 │
 ├── model/
-│   ├── model.py           # Regression model training/prediction
-│   ├── visualize.py       # Plots predicted returns
+│   ├── model.py                # Regression model training/prediction
+│   ├── visualize.py            # Plots predicted returns
 │
-├── results.csv            # Output file
-├── README.md              # This file
+├── MM-DD-YYY-predictions.csv   # Output file
+├── README.md                   # This file
 ```
 
 ---
