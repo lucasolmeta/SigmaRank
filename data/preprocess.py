@@ -4,7 +4,7 @@ import pandas as pd
 from ta.trend import sma_indicator
 from pandas.tseries.offsets import BDay
 import numpy as np
-
+from config import BASE_DIR
 
 def main():
     # get ticker symbol list
@@ -14,7 +14,9 @@ def main():
 
     # extract SPY data
 
-    spy_data = pd.read_csv('data/by_stock/SPY.csv')
+    SPY_PATH = os.path.join(BASE_DIR, 'data', 'by_stock', 'SPY.csv')
+    spy_data = pd.read_csv(SPY_PATH)
+
     spy_data['Date'] = pd.to_datetime(spy_data['Date'])
 
     last_date = spy_data['Date'].max()
@@ -50,7 +52,9 @@ def main():
 
         # extract pulled data
 
-        data = pd.read_csv(f'data/by_stock/{ticker}.csv')
+        TICKER_PATH = os.path.join(BASE_DIR, 'data','by_stock',f'{ticker}.csv')
+        data = pd.read_csv(TICKER_PATH)        
+        
         data['Date'] = pd.to_datetime(data['Date'])
 
         # append prediction row to ticker df
@@ -110,7 +114,7 @@ def main():
 
         # save finalized data to csv
 
-        data.to_csv(f'data/by_stock/{ticker}.csv')
+        data.to_csv(TICKER_PATH)        
 
 if __name__ == '__main__':
     main()

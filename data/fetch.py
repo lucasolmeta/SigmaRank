@@ -3,6 +3,7 @@ import sys
 import os
 import pandas as pd
 import shutil
+from config import BASE_DIR
 
 def main():
     # get ticker symbol list
@@ -20,18 +21,24 @@ def main():
 
     # clear / create directory
 
-    if os.path.exists('data/by_stock'):
-        shutil.rmtree('data/by_stock')
-        os.makedirs('data/by_stock')
+    DIR_PATH = os.path.join(BASE_DIR, 'data', 'by_stock')
+
+    if os.path.exists(DIR_PATH):
+        shutil.rmtree(DIR_PATH)
+        os.makedirs(DIR_PATH)
     else:
-        os.makedirs('data/by_stock', exist_ok=True)
+        os.makedirs(DIR_PATH, exist_ok=True)
 
     # split each ticker into it's own file
 
     if isinstance(data.columns, pd.MultiIndex):
         for ticker in ticker_symbols:
             df = data.xs(ticker, axis=1, level=1, drop_level=False).droplevel(1, axis=1)
-            df.to_csv(f'data/by_stock/{ticker}.csv')
+
+            TICKER_PATH = os.path.join(BASE_DIR, 'data', 'by_stock', f'{ticker}.csv')
+
+            df.reset_index(inplace=True)
+            df.to_csv(TICKER_PATH, index=False)
 
 if __name__ == '__main__':
     main()

@@ -2,6 +2,7 @@ from xgboost import XGBClassifier, XGBRegressor
 import sys
 import os
 import pandas as pd
+from config import BASE_DIR
 
 def main():
     # get ticker symbol list
@@ -18,7 +19,8 @@ def main():
 
         # extract data
 
-        data = pd.read_csv(f'data/by_stock/{ticker}.csv')
+        TICKER_PATH = os.path.join(BASE_DIR,'data',f'by_stock',f'{ticker}.csv')
+        data = pd.read_csv(TICKER_PATH)
 
         date = str(data.iloc[-1]['Date'])
 
@@ -110,10 +112,13 @@ def main():
 
     predictions.reset_index(drop=True, inplace=True)
 
-    if not os.path.exists('results'):
-        os.makedirs('results', exist_ok=True)
+    RESULTS_DIR = os.path.join(BASE_DIR, 'results')
 
-    predictions.to_csv(f'results/{date}-results.csv')
+    if not os.path.exists(RESULTS_DIR):
+        os.makedirs(RESULTS_DIR, exist_ok=True)
+
+    RESULTS_PATH = os.path.join(BASE_DIR, 'results', f'{date}-results.csv')
+    predictions.to_csv(RESULTS_PATH, index=False)   
 
 if __name__ == '__main__':
     main() 
