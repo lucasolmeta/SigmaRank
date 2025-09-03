@@ -4,11 +4,11 @@ from model import model
 from model import evaluate
 
 def main():
-    #fetch.main()
+    fetch.main()
 
-    #preprocess.main()
+    preprocess.main()
 
-    #model.main()
+    model.main()
 
     evaluate.main()
 
