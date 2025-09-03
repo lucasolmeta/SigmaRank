@@ -114,7 +114,7 @@ def main():
 
         # save finalized data to csv
 
-        data.to_csv(TICKER_PATH)        
+        data.to_csv(TICKER_PATH, index=False)        
 
 if __name__ == '__main__':
     main()

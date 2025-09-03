@@ -1,8 +1,10 @@
-from xgboost import XGBClassifier, XGBRegressor
+from xgboost import XGBRegressor
 import sys
 import os
 import pandas as pd
 from config import BASE_DIR
+from datetime import datetime, time
+from pandas_market_calendars import get_calendar
 
 def main():
     # get ticker symbol list
@@ -10,7 +12,7 @@ def main():
     sys.path.append(os.path.abspath('../'))
     from config import ticker_symbols
 
-    predictions = pd.DataFrame(columns=['Ticker','Predicted Outcome','Outcome Certainty','Predicted Return','Recommendation','Previous Close','Predicted Close'])
+    predictions = pd.DataFrame(columns=['Ticker','Predicted Return','Previous Close','Predicted Close', 'Recommended Action'])
 
     for ticker in ticker_symbols:
 
@@ -22,7 +24,23 @@ def main():
         TICKER_PATH = os.path.join(BASE_DIR,'data',f'by_stock',f'{ticker}.csv')
         data = pd.read_csv(TICKER_PATH)
 
-        date = str(data.iloc[-1]['Date'])
+        nyse = get_calendar('NYSE')
+
+        now = datetime.now()
+        market_close_time = time(16, 30)
+
+        # Get trading schedule from today onward
+
+        schedule = nyse.schedule(start_date=now - pd.Timedelta(days=1), end_date=now + pd.Timedelta(days=7))
+        trading_days = schedule.index.normalize()
+
+        today = pd.Timestamp(now.date())
+
+        if today in trading_days and now.time() <= market_close_time:
+            next_day = today
+        else:
+            future_trading_days = trading_days[trading_days > today]
+            next_day = future_trading_days[0]
 
         #################################
         ### REGRESSION MODEL TRAINING ###
@@ -52,73 +70,40 @@ def main():
         previous_close = float(data.iloc[-1]['previous_close'])
         pred_close = previous_close * (pred_return/100 + 1)
 
-        #####################################
-        ### CLASSIFICATION MODEL TRAINING ###
-        #####################################
-
-        # split test and prediction data
-
-        feature_columns = data.columns.difference(['target_daily_return','target_daily_result','Date'])
-
-        train, test = data.iloc[:-1].copy(), data.iloc[-1:].copy()
-
-        X_train, y_train = train[feature_columns], train['target_daily_result']
-        X_test = test[feature_columns]
-
-        # fit model
-
-        model = XGBClassifier(n_estimators=100, max_depth=3, learning_rate=0.1)
-        model.fit(X_train, y_train)
-
-        # predict
-
-        probs = model.predict_proba(X_test)
-        certainty = probs[:, 1][0]
-
-        # interpret results
-
-        result, recommendation = '',''
-        
-        if certainty > 0.5:
-            result = '+'
-            if certainty > 0.7:
-                recommendation = 'Buy'
-            else:
-                recommendation = 'Refrain'
-        else:
-            result = '-'
-            recommendation = 'Refrain'
-            certainty = 1 - certainty
-
         ####################
         ### SAVE RESULTS ###
         ####################
         
         predictions.loc[len(predictions)] = {
             'Ticker': ticker,
-            'Predicted Outcome': result,
-            'Outcome Certainty': certainty,
             'Predicted Return': pred_return,
-            'Recommendation': recommendation,
             'Previous Close': float(previous_close),
-            'Predicted Close': float(pred_close)
+            'Predicted Close': float(pred_close),
+            'Recommended Action': 'No Action'
         }
 
     predictions.sort_values(
-        by=['Recommendation', 'Predicted Return'],
-        ascending=[True, False],
+        by=['Predicted Return'],
+        ascending=[False],
         inplace=True
     )
-
     predictions.reset_index(drop=True, inplace=True)
 
-    RESULTS_DIR = os.path.join(BASE_DIR, 'results')
+    for i, row in predictions.iterrows():
+        if i < 5:
+            print(row)
+            if row['Predicted Return'] > 0.3:
+                predictions.loc[i, 'Recommended Action'] = 'Buy'
+        else:
+            break
 
-    if not os.path.exists(RESULTS_DIR):
-        os.makedirs(RESULTS_DIR, exist_ok=True)
+    PRED_DIR = os.path.join(BASE_DIR, 'predictions')
 
-    RESULTS_PATH = os.path.join(BASE_DIR, 'results', f'{date}-results.csv')
-    predictions.to_csv(RESULTS_PATH, index=False)   
+    if not os.path.exists(PRED_DIR):
+        os.makedirs(PRED_DIR, exist_ok=True)
+
+    PRED_PATH = os.path.join(PRED_DIR, f'{next_day.strftime('%Y-%m-%d')}-predictions.csv')
+    predictions.to_csv(PRED_PATH, index=False)
 
 if __name__ == '__main__':
     main() 

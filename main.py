@@ -1,15 +1,18 @@
 from data import fetch
 from data import preprocess
 from model import model
+from model import evaluate
 
 def main():
-    fetch.main()
+    #fetch.main()
 
-    preprocess.main()
+    #preprocess.main()
 
-    model.main()
+    #model.main()
 
-    print('Model results outputted successfully!')
+    evaluate.main()
+
+    print('Code completed successfully!')
 
 if __name__ == '__main__':
     main() 
