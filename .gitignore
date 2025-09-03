@@ -2,3 +2,6 @@ assets/
 data/by_stock/**
 !data/by_stock/.gitkeep
 results/**
+!results/.gitkeep
+predictions/**
+!predictions/.gitkeep
