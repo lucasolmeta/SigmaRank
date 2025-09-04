@@ -4,6 +4,8 @@ from model import model
 from model import evaluate
 
 def main():
+    #if market open then skip
+    #else
     fetch.main()
 
     preprocess.main()

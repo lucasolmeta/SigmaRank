@@ -47,7 +47,7 @@ def main():
         new_row = {
             'Ticker': ticker,
             'Predicted Return': pred[pred['Ticker'] == ticker]['Predicted Return'].iloc[0],
-            'Return': data.loc[len(data) - 1, 'previous_close'] / data.loc[len(data) - 2, 'previous_close'],
+            'Return': (1 - data.loc[len(data) - 1, 'previous_close'] / data.loc[len(data) - 2, 'previous_close']) * 100,
             'Previous Close': data.loc[len(data) - 2, 'previous_close'],
             'Predicted Close': pred[pred['Ticker'] == ticker]['Predicted Close'].iloc[0],
             'Close': data.loc[len(data) - 1, 'previous_close'],
@@ -67,7 +67,8 @@ def main():
     recommended_buys = len(results[results['Recommended Action'] == 'Buy'])
     positive_returns = len(results[(results['Recommended Action'] == 'Buy') & (results['Return'] > 0)])
     negative_returns = len(results[(results['Recommended Action'] == 'Buy') & (results['Return'] < 0)])
-    predicted_return = float(np.mean(results[results['Recommended Action'] == 'Buy']['Predicted Return']))
+    predicted_return = np.mean(results[results['Recommended Action'] == 'Buy']['Predicted Return'])
+    sp_return = data.loc[len(data) - 1, 'SPY_1d_lagged_return']
     overall_return = float(np.mean(results[results['Recommended Action'] == 'Buy']['Return']))
 
     new_row = {
@@ -76,6 +77,7 @@ def main():
         'Positive Returns': positive_returns,
         'Negative Returns': negative_returns,
         'Predicted Return': predicted_return,
+        'SPY Return': sp_return,
         'Overall Return': overall_return
     }
 
