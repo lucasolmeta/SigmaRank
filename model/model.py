@@ -21,7 +21,7 @@ def main():
 
         # extract data
 
-        TICKER_PATH = os.path.join(BASE_DIR,'data',f'by_stock',f'{ticker}.csv')
+        TICKER_PATH = os.path.join(BASE_DIR,'data','by_stock',f'{ticker}.csv')
         data = pd.read_csv(TICKER_PATH)
 
         nyse = get_calendar('NYSE')
@@ -91,7 +91,6 @@ def main():
 
     for i, row in predictions.iterrows():
         if i < 5:
-            print(row)
             if row['Predicted Return'] > 0.3:
                 predictions.loc[i, 'Recommended Action'] = 'Buy'
         else:
