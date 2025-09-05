@@ -10,7 +10,7 @@
 
 # ⚠️ Disclaimer
 
-**Use at your own risk. Returns are never guaranteed and investing involves risk! **
+**Use at your own risk. Returns are never guaranteed and investing involves risk!**
 
 ---
 
@@ -77,3 +77,4 @@ Install everything:
 ```bash
 
 pip install -r requirements.txt
+
