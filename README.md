@@ -26,7 +26,7 @@
 ```
 MrktMove/
 │
-├── main.py                          # Runs entire daily pipeline (fetch → preprocess → predict)
+├── main.py                          # Runs entire daily pipeline (fetch → preprocess → predict → evaluate → log results)
 ├── config.py                        # Store ticker list
 │
 ├── data/
@@ -84,5 +84,6 @@ Install everything:
 ```bash
 
 pip install -r requirements.txt
+
 
 
