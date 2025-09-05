@@ -33,7 +33,7 @@ MrktMove/
 │   ├── fetch.py                     # Pulls historical OHLCV data from yfinance
 │   ├── preprocess.py                # Builds features + return targets
 │   ├── by_stock/                    # Stores per-ticker training data
-│   │   ├── TICKER.csv               # Features and returns for a given ticker
+│       ├── TICKER.csv               # Features and returns for a given ticker
 │
 ├── model/
 │   ├── model.py                     # Regression model training/prediction
@@ -84,6 +84,7 @@ Install everything:
 ```bash
 
 pip install -r requirements.txt
+
 
 
 
