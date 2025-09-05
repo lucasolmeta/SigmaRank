@@ -26,21 +26,28 @@
 ```
 MrktMove/
 │
-├── main.py                     # Runs entire daily pipeline (fetch → preprocess → predict)
-├── config.py                   # Store ticker list
+├── main.py                          # Runs entire daily pipeline (fetch → preprocess → predict)
+├── config.py                        # Store ticker list
 │
 ├── data/
-│   ├── fetch.py                # Pulls historical OHLCV data from yfinance
-│   ├── preprocess.py           # Builds features + return targets
-│   ├── by_stock/               # Stores per-ticker training data
-│   │   ├── TICKER.csv          # Features and returns for a given ticker
+│   ├── fetch.py                     # Pulls historical OHLCV data from yfinance
+│   ├── preprocess.py                # Builds features + return targets
+│   ├── by_stock/                    # Stores per-ticker training data
+│   │   ├── TICKER.csv               # Features and returns for a given ticker
 │
 ├── model/
-│   ├── model.py                # Regression model training/prediction
-│   ├── visualize.py            # Plots predicted returns
+│   ├── model.py                     # Regression model training/prediction
+│   ├── evaluate.py                  # Result evaluations
+│   ├── visualize.py                 # Plots predicted returns
 │
-├── MM-DD-YYY-predictions.csv   # Daily output file
-├── README.md                   # This file
+├── predictions/
+│   ├── YYYY-MM-DD-predictions.csv   # Daily prediction file
+│
+├── results/
+│   ├── YYYY-MM-DD-results.csv       # Daily results file
+│   ├── daily-results.csv            # Result logs by day
+│
+├── README.md                        # This file
 ```
 
 ---
@@ -77,4 +84,5 @@ Install everything:
 ```bash
 
 pip install -r requirements.txt
+
 
