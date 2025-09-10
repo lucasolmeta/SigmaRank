@@ -4,18 +4,26 @@ from datetime import datetime, time
 from pandas_market_calendars import get_calendar
 import os
 from config import BASE_DIR
+import pytz
 
 def main():
+
     # determine date of last prediction and next business day
 
     nyse = get_calendar('NYSE')
-    now = datetime.now()
+
+    ny_tz = pytz.timezone('America/New_York')
+    now = datetime.now(tz=ny_tz)
     market_close_time = time(16, 30)
 
-    schedule = nyse.schedule(start_date=now - pd.Timedelta(days=7), end_date=now + pd.Timedelta(days=1))
-    trading_days = schedule.index.normalize()
+    schedule = nyse.schedule(
+        start_date=now - pd.Timedelta(days=7),
+        end_date=now + pd.Timedelta(days=1)
+    )
 
-    today = pd.Timestamp(now.date())
+    trading_days = schedule.index.tz_localize('UTC').tz_convert(ny_tz).normalize()
+
+    today = pd.Timestamp(now.date(), tz=ny_tz)
 
     if today in trading_days and now.time() > market_close_time:
         completed_day = today.strftime('%Y-%m-%d')
@@ -63,6 +71,8 @@ def main():
 
     DAILY_RETURNS_PATH = os.path.join(BASE_DIR, 'results', 'daily-returns.csv')
     daily_returns = pd.read_csv(DAILY_RETURNS_PATH, index_col=False)
+
+    daily_returns = daily_returns[['Date','Recommended Buys','Positive Returns','Negative Returns','Predicted Return','SPY Return','Overall Return']]
 
     recommended_buys = len(results[results['Recommended Action'] == 'Buy'])
     positive_returns = len(results[(results['Recommended Action'] == 'Buy') & (results['Return'] > 0)])

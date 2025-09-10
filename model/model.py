@@ -4,6 +4,7 @@ import os
 import pandas as pd
 from config import BASE_DIR
 from datetime import datetime, time
+import pytz
 from pandas_market_calendars import get_calendar
 
 def main():
@@ -14,6 +15,27 @@ def main():
 
     predictions = pd.DataFrame(columns=['Ticker','Predicted Return','Previous Close','Predicted Close', 'Recommended Action'])
 
+    # determine date of next business day
+
+    nyse = get_calendar('NYSE')
+    ny_tz = pytz.timezone('America/New_York')
+    now = datetime.now(tz=ny_tz)
+    market_close_time = time(16, 30)
+
+    schedule = nyse.schedule(
+        start_date=now - pd.Timedelta(days=1),
+        end_date=now + pd.Timedelta(days=7)
+    )
+
+    trading_days = schedule.index.tz_localize('UTC').tz_convert(ny_tz).normalize()
+    today = pd.Timestamp(now.date(), tz=ny_tz)
+
+    if today in trading_days and now.time() <= market_close_time:
+        next_day = today.strftime('%Y-%m-%d')
+    else:
+        future_trading_days = trading_days[trading_days > today]
+        next_day = future_trading_days[0].strftime('%Y-%m-%d')
+
     for ticker in ticker_symbols:
 
         if ticker == 'SPY':
@@ -23,24 +45,6 @@ def main():
 
         TICKER_PATH = os.path.join(BASE_DIR,'data','by_stock',f'{ticker}.csv')
         data = pd.read_csv(TICKER_PATH)
-
-        nyse = get_calendar('NYSE')
-
-        now = datetime.now()
-        market_close_time = time(16, 30)
-
-        # Get trading schedule from today onward
-
-        schedule = nyse.schedule(start_date=now - pd.Timedelta(days=1), end_date=now + pd.Timedelta(days=7))
-        trading_days = schedule.index.normalize()
-
-        today = pd.Timestamp(now.date())
-
-        if today in trading_days and now.time() <= market_close_time:
-            next_day = today
-        else:
-            future_trading_days = trading_days[trading_days > today]
-            next_day = future_trading_days[0]
 
         #################################
         ### REGRESSION MODEL TRAINING ###
@@ -101,7 +105,7 @@ def main():
     if not os.path.exists(PRED_DIR):
         os.makedirs(PRED_DIR, exist_ok=True)
 
-    PRED_PATH = os.path.join(PRED_DIR, f'{next_day.strftime('%Y-%m-%d')}-predictions.csv')
+    PRED_PATH = os.path.join(PRED_DIR, f'{next_day}-predictions.csv')
     predictions.to_csv(PRED_PATH, index=False)
 
 if __name__ == '__main__':
