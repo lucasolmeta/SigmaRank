@@ -5,8 +5,6 @@ from model import evaluate
 from model import visualize
 
 def main():
-    #if market open then skip
-    #else
     fetch.main()
 
     preprocess.main()
@@ -16,8 +14,6 @@ def main():
     evaluate.main()
 
     #visualize.main()
-
-    print('Code completed successfully!')
 
 if __name__ == '__main__':
     main() 
