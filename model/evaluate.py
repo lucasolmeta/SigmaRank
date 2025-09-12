@@ -11,25 +11,22 @@ def main():
     # determine date of last prediction and next business day
 
     nyse = get_calendar('NYSE')
-
     ny_tz = pytz.timezone('America/New_York')
     now = datetime.now(tz=ny_tz)
-    market_close_time = time(16, 30)
 
     schedule = nyse.schedule(
         start_date=now - pd.Timedelta(days=7),
-        end_date=now + pd.Timedelta(days=1)
-    )
+        end_date=now + pd.Timedelta(days=7)
+    ).reset_index()
 
-    trading_days = schedule.index.tz_localize('UTC').tz_convert(ny_tz).normalize()
+    schedule['date'] = schedule['market_open'].dt.tz_convert(ny_tz).dt.normalize()
 
-    today = pd.Timestamp(now.date(), tz=ny_tz)
+    today_date = pd.Timestamp(now.date(), tz=ny_tz)
 
-    if today in trading_days and now.time() > market_close_time:
-        completed_day = today.strftime('%Y-%m-%d')
+    if not schedule.loc[schedule['date'] == today_date].empty and now <= schedule.loc[schedule['date'] == today_date]['market_close'].iloc[0]:
+        completed_day = schedule.loc[schedule['date'] < today_date].iloc[-1]['date'].strftime('%Y-%m-%d')
     else:
-        past_trading_days = trading_days[trading_days < today]
-        completed_day = past_trading_days[-1].strftime('%Y-%m-%d')
+        completed_day = today_date.strftime('%Y-%m-%d')
 
     # fetch predictions
 

@@ -20,21 +20,22 @@ def main():
     nyse = get_calendar('NYSE')
     ny_tz = pytz.timezone('America/New_York')
     now = datetime.now(tz=ny_tz)
-    market_close_time = time(16, 30)
 
     schedule = nyse.schedule(
         start_date=now - pd.Timedelta(days=1),
         end_date=now + pd.Timedelta(days=7)
-    )
+    ).reset_index()
 
-    trading_days = schedule.index.tz_localize('UTC').tz_convert(ny_tz).normalize()
-    today = pd.Timestamp(now.date(), tz=ny_tz)
+    schedule['date'] = schedule['market_open'].dt.tz_convert(ny_tz).dt.normalize()
 
-    if today in trading_days and now.time() <= market_close_time:
-        next_day = today.strftime('%Y-%m-%d')
+    today_date = pd.Timestamp(now.date(), tz=ny_tz)
+    today_row = schedule.loc[schedule['date'] == today_date]
+
+    if not today_row.empty and now <= today_row['market_close'].iloc[0]:
+        next_day = today_date.strftime('%Y-%m-%d')
     else:
-        future_trading_days = trading_days[trading_days > today]
-        next_day = future_trading_days[0].strftime('%Y-%m-%d')
+        future_row = schedule.loc[schedule['date'] > today_date].iloc[0]
+        next_day = future_row['date'].strftime('%Y-%m-%d')
 
     for ticker in ticker_symbols:
 
