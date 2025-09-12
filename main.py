@@ -5,11 +5,11 @@ from model import evaluate
 from model import visualize
 
 def main():
-    fetch.main()
+    #fetch.main()
 
-    preprocess.main()
+    #preprocess.main()
 
-    model.main()
+    #model.main()
 
     evaluate.main()
 
