@@ -22,6 +22,10 @@ def main():
     schedule['date'] = schedule['market_open'].dt.tz_convert(ny_tz).dt.normalize()
 
     today_date = pd.Timestamp(now.date(), tz=ny_tz)
+    today_row = schedule.loc[schedule['date'] == today_date]
+
+    if not today_row.empty and today_row['market_open'].iloc[0] <= now <= today_row['market_close'].iloc[0]:
+        raise RuntimeError("Market is still open - please try again later")
 
     if not schedule.loc[schedule['date'] == today_date].empty and now <= schedule.loc[schedule['date'] == today_date]['market_close'].iloc[0]:
         completed_day = schedule.loc[schedule['date'] < today_date].iloc[-1]['date'].strftime('%Y-%m-%d')
