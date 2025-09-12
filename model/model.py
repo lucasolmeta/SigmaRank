@@ -31,6 +31,9 @@ def main():
     today_date = pd.Timestamp(now.date(), tz=ny_tz)
     today_row = schedule.loc[schedule['date'] == today_date]
 
+    if not today_row.empty and today_row['market_open'].iloc[0] <= now <= today_row['market_close'].iloc[0]:
+        raise RuntimeError("Market is still open - please try again later")
+
     if not today_row.empty and now <= today_row['market_close'].iloc[0]:
         next_day = today_date.strftime('%Y-%m-%d')
     else:
