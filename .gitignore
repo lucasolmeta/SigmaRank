@@ -1,3 +1,2 @@
 assets/
-data/by_stock/**
-!data/by_stock/.gitkeep
+data/by_stock/
