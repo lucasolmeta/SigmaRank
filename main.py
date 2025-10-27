@@ -1,19 +1,10 @@
-from data import fetch
-from data import preprocess
-from model import model
-from model import evaluate
-from model import visualize
+from scripts import fetch
+from scripts import build_features
 
 def main():
     fetch.main()
 
-    preprocess.main()
-
-    model.main()
-
-    evaluate.main()
-
-    #visualize.main()
+    build_features.main()
 
 if __name__ == '__main__':
     main() 
