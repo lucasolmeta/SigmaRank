@@ -3,7 +3,7 @@ from src.features import price_volume, wyckoff, assemble
 def main():
     price_volume.main()
 
-    #wyckoff.main()
+    wyckoff.main()
 
     #assemble.main()
 
