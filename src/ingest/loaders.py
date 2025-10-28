@@ -1,42 +1,32 @@
 import yfinance as yf
-import sys
 import os
 import pandas as pd
-import shutil
-from config import BASE_DIR
 import yaml
+from src.utils.paths import get_config_dir, get_data_dir, get_yaml_path
+
+YAML_PATH_STR = get_yaml_path(format='str')
+CONFIG_DIR = get_config_dir()
+DATA_DIR = get_data_dir()
+
+with open(YAML_PATH_STR) as f:
+    config = yaml.safe_load(f)
 
 def main():
-    # get ticker symbol list
+    tickers = config['fetch']['tickers']
+    days = config['fetch']['days']
 
-    sys.path.append(os.path.abspath('..'))
-    from config import ticker_symbols
-
-    #####################
-    ### DATA FETCHING ###
-    #####################
-
-    # fetch requested ticker data
-
-    data = yf.download(ticker_symbols, period='max', interval='1d')
-
-    # clear / create directory
-
-    DIR_PATH = os.path.join(BASE_DIR, 'data', 'by_stock')
-
-    if os.path.exists(DIR_PATH):
-        shutil.rmtree(DIR_PATH)
-        os.makedirs(DIR_PATH)
-    else:
-        os.makedirs(DIR_PATH, exist_ok=True)
+    data = yf.download(tickers, period='max', interval='1d')
 
     # split each ticker into it's own file
 
     if isinstance(data.columns, pd.MultiIndex):
-        for ticker in ticker_symbols:
+        for ticker in tickers:
             df = data.xs(ticker, axis=1, level=1, drop_level=False).droplevel(1, axis=1)
 
-            TICKER_PATH = os.path.join(BASE_DIR, 'data', 'by_stock', f'{ticker}.csv')
+            if len(df) > days + 20:
+                df = df[-(days + 20):]
+
+            TICKER_PATH = os.path.join(DATA_DIR, 'raw', f'{ticker}.csv')
 
             df.reset_index(inplace=True)
             df.to_csv(TICKER_PATH, index=False)

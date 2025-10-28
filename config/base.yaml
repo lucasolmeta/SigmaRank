@@ -1,7 +1,55 @@
-data:
-    raw_dir: 'data/raw/'
-    interim_dir: 'data/raw/'
-    features_dir: 'data/raw/'
-
-fetch: 
-    days: 756
+fetch:
+  days: 756
+  lookback_period: 90d
+  number: 50
+  tickers:
+  - TSLA
+  - NVDA
+  - AAPL
+  - AMD
+  - PLTR
+  - MSFT
+  - AMZN
+  - META
+  - GOOGL
+  - AVGO
+  - ORCL
+  - GOOG
+  - HOOD
+  - UNH
+  - NFLX
+  - COIN
+  - APP
+  - MU
+  - INTC
+  - LLY
+  - JPM
+  - CRM
+  - COST
+  - BRK-B
+  - V
+  - BAC
+  - GEV
+  - SMCI
+  - XOM
+  - UBER
+  - WMT
+  - BA
+  - MA
+  - GS
+  - AMAT
+  - JNJ
+  - ADBE
+  - IBM
+  - CRWD
+  - QCOM
+  - NOW
+  - GE
+  - C
+  - HD
+  - TXN
+  - PANW
+  - CVX
+  - CSCO
+  - CAT
+  - LRCX

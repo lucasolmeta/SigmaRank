@@ -10,12 +10,17 @@ def get_calendar(name='XNYS'):
     return mcal.get_calendar(name)
 
 def trading_sessions(back_days: int, for_days: int=1, cal_name: str='XNYS'):
+    if back_days < 0 or for_days < 0:
+        raise RuntimeError(f'back_days and for_days must be non-negative!')
+    elif back_days == 0 and for_days == 0:
+        raise RuntimeError(f'back_days and for_days cannot both be zero!')
+
     cal = get_calendar(name=cal_name)
 
     now_et = datetime.now(tz=EASTERN)
 
     sched = cal.schedule(
-        start_date=(now_et.date() + timedelta(days=back_days*3)),
+        start_date=(now_et.date() - timedelta(days=back_days*3)),
         end_date=(now_et.date() + timedelta(days=for_days*3))
     )
 
@@ -27,7 +32,7 @@ def trading_sessions(back_days: int, for_days: int=1, cal_name: str='XNYS'):
     future = closes_et[closes_et > now_et]
     future = future.head(for_days) if for_days > 0 else future[:0]
 
-    sessions_et = past.append(future)
+    sessions_et = pd.DatetimeIndex(pd.concat([past, future]))
     return sessions_et.tz_convert('UTC')
 
 def last_completed_session():
