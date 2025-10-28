@@ -3,13 +3,11 @@ import pandas as pd
 import yfinance as yf
 import requests
 from io import StringIO
-from src.utils.paths import get_yaml_path
+from src.utils.paths import get_yaml, get_yaml_path
+
+config = get_yaml()
 
 YAML_PATH = get_yaml_path()
-YAML_PATH_STR = get_yaml_path(format='str')
-
-with open(YAML_PATH_STR) as f:
-    config = yaml.safe_load(f)
 
 def main():
     top_n = config['fetch']['number']

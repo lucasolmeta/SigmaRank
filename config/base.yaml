@@ -33,22 +33,22 @@ fetch:
   - SMCI
   - XOM
   - UBER
-  - WMT
   - BA
+  - WMT
   - MA
   - GS
   - AMAT
   - JNJ
   - ADBE
+  - QCOM
   - IBM
   - CRWD
-  - QCOM
   - NOW
   - GE
   - C
-  - HD
   - TXN
   - PANW
+  - HD
   - CVX
   - CSCO
   - CAT

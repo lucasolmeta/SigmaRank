@@ -2,14 +2,13 @@ import yfinance as yf
 import os
 import pandas as pd
 import yaml
-from src.utils.paths import get_config_dir, get_data_dir, get_yaml_path
+from src.utils.paths import get_yaml, get_config_dir, get_data_dir, get_yaml_path
+
+config = get_yaml()
 
 YAML_PATH_STR = get_yaml_path(format='str')
 CONFIG_DIR = get_config_dir()
 DATA_DIR = get_data_dir()
-
-with open(YAML_PATH_STR) as f:
-    config = yaml.safe_load(f)
 
 def main():
     tickers = config['fetch']['tickers']

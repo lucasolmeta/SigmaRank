@@ -1,4 +1,5 @@
 from pathlib import Path
+import yaml
 
 def get_base_dir(format='Path'):
     base_dir = Path(__file__).resolve().parents[2]
@@ -49,3 +50,9 @@ def get_yaml_path(format='Path'):
         return yaml_path
     elif format == 'str':
         return str( yaml_path )
+    
+def get_yaml():
+    YAML_PATH_STR = get_yaml_path(format="str")
+
+    with open(YAML_PATH_STR) as f:
+        return yaml.safe_load(f)
