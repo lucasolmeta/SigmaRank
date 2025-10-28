@@ -40,3 +40,9 @@ def last_completed_session():
 
 def next_n_sessions(n):
     return trading_sessions(back_days=0, for_days=n)
+
+def str_as_dt(s):
+    return datetime.strptime(s, "%Y-%m-%d")
+
+def dt_as_str(dt):
+    return dt.strftime("%Y-%m-%d")
