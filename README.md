@@ -22,7 +22,7 @@ Use this project at your own discretion and risk.
 
 ### 🧩 Project Overview
 
-SigmaRanks is an open data-driven trading pipeline that analyzes market information, builds ranked trading signals, and tests ideas through safe, transparent backtesting. It is currently being developed and should not yet be considered a stable or production-ready system.
+SigmaRanks is an open data-driven trading pipeline built by Lucas Olmeta and Enrique Mesejo that analyzes market information, builds ranked trading signals, and tests ideas through safe, transparent backtesting. It is currently being developed and should not yet be considered a stable or production-ready system.
 
 ---
 
@@ -45,3 +45,4 @@ Before running any part of the pipeline:
    ```bash
    python -m scripts.FILENAME
    ```
+
