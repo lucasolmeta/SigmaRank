@@ -27,18 +27,16 @@ def main():
 
         # append prediction row to ticker df
 
-        last_date = data['Date'].max()
         next_date = next_n_sessions(1)[0]
 
         new_row = {col: np.nan for col in data.columns}
-        new_row['Date'] = pd.to_datetime(next_date)
+        new_row['Date'] = pd.to_datetime(next_date.date())
     
         data.loc[len(data)] = new_row
 
         # target features (tomorrow's daily return and result)
 
         data['target_daily_return'] = data['Close'] / data['Close'].shift(1) - 1
-        data['target_daily_result'] = (data['target_daily_return'] > 0).astype(int)
 
         # previous day features
  
@@ -55,9 +53,9 @@ def main():
 
         data['volatility_5d'] = data['Close'].pct_change(fill_method=None).shift(1).rolling(5).std()
 
-        # volumn related features
+        # volume related features
 
-        avg_volume_10 = data['Volume'].shift(2).rolling(10).mean()
+        avg_volume_10 = data['Volume'].shift(1).rolling(10).mean()
         data['volume_spike_ratio'] = data['Volume'].shift(1) / avg_volume_10
 
         # sma10 features
@@ -70,8 +68,10 @@ def main():
         num_rows = config['fetch']['days']
         data = data[-num_rows:]
 
-        feature_columns = data.columns.difference(['target_daily_return'])
-        data.dropna(subset=feature_columns, inplace=True)
+        non_null_feats = data.columns.difference([
+            'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'target_daily_return'
+        ])
+        data.dropna(subset=non_null_feats, inplace=True)
 
         # save finalized data to csv
 

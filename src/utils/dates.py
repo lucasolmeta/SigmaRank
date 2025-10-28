@@ -27,12 +27,13 @@ def trading_sessions(back_days: int, for_days: int=1, cal_name: str='XNYS'):
     closes_et = pd.DatetimeIndex(sched['market_close'])
 
     past = closes_et[closes_et <= now_et]
-    past = past.tail(back_days) if back_days > 0 else past[:0]
+    past = past[-back_days:] if back_days > 0 else past[:0]
 
     future = closes_et[closes_et > now_et]
-    future = future.head(for_days) if for_days > 0 else future[:0]
+    future = future[:for_days] if for_days > 0 else future[:0]
 
-    sessions_et = pd.DatetimeIndex(pd.concat([past, future]))
+    sessions_et = pd.DatetimeIndex(past.tolist() + future.tolist()).sort_values()
+    
     return sessions_et.tz_convert('UTC')
 
 def last_completed_session():

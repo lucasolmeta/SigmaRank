@@ -4,15 +4,15 @@ from src.execution import cost_models, simulator
 
 
 def main():
-    outlook.main()
+    #outlook.main()
 
-    ranking.main()
+    #ranking.main()
 
-    mc_sizer.main()
+    #mc_sizer.main()
 
-    cost_models.main()
+    #cost_models.main()
 
-    simulator.main()
+    #simulator.main()
 
 if __name__ == '__main__':
     main() 
