@@ -1,5 +1,4 @@
-from src.ingest import loaders
-from src.ingest import universe
+from src.ingest import loaders, universe
 
 def main():
     universe.main()

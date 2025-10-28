@@ -1,10 +1,11 @@
-from src.features import loaders
-from src.ingest import universe
+from src.features import price_volume, wyckoff, assemble
 
 def main():
-    loaders.main()
+    price_volume.main()
 
-    universe.main()
+    wyckoff.main()
+
+    assemble.main()
 
 if __name__ == '__main__':
     main() 
