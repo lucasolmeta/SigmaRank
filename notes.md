@@ -1,3 +1,7 @@
+**Current Progress:**
+- Completed: ingest
+- In Progress: features
+
 **Things to come back to:**
 
 - We currently have survivorship bias as a result of choosing random S&P500 tickers

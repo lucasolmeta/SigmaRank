@@ -33,6 +33,7 @@ def main():
 
     adv = {}
     multi = isinstance(data.columns, pd.MultiIndex)
+    
     for ticker in sp500_tickers:
         try:
             df = data[ticker] if multi else data
