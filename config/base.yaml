@@ -1,3 +1,10 @@
+project:
+  name: sigmaranks
+  timezone: America/New_York
+data:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
 fetch:
   days: 756
   lookback_period: 90d
@@ -6,50 +13,50 @@ fetch:
   - TSLA
   - NVDA
   - AAPL
-  - AMD
-  - PLTR
   - MSFT
-  - AMZN
   - META
+  - AMD
+  - AMZN
   - GOOGL
   - AVGO
+  - PLTR
   - ORCL
   - GOOG
-  - HOOD
-  - UNH
-  - NFLX
-  - COIN
-  - APP
   - MU
+  - NFLX
+  - HOOD
+  - APP
   - INTC
   - LLY
+  - UNH
+  - COIN
   - JPM
-  - CRM
   - COST
   - BRK-B
+  - CRM
   - V
-  - BAC
-  - GEV
-  - SMCI
-  - XOM
-  - UBER
-  - BA
   - WMT
-  - MA
-  - GS
+  - GEV
+  - BAC
   - AMAT
+  - XOM
+  - SNDK
+  - BA
   - JNJ
-  - ADBE
+  - UBER
+  - LRCX
   - QCOM
-  - IBM
-  - CRWD
-  - NOW
-  - GE
-  - C
-  - TXN
-  - PANW
+  - GS
+  - MA
+  - PFE
+  - ADBE
   - HD
-  - CVX
   - CSCO
   - CAT
-  - LRCX
+  - NOW
+  - IBM
+  - C
+  - CRWD
+  - TXN
+  - BKNG
+  - INTU

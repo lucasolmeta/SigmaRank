@@ -47,7 +47,7 @@ def main():
 
         data['1d_lagged_return'] = data['Close'].shift(1) / data['Close'].shift(2) - 1
         data['3d_lagged_return'] = data['Close'].shift(1) / data['Close'].shift(4) - 1
-        data['5y_lagged_return'] = data['Close'].shift(1) / data['Close'].shift(6) - 1
+        data['5d_lagged_return'] = data['Close'].shift(1) / data['Close'].shift(6) - 1
 
         # volatility related features
 

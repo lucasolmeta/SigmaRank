@@ -13,8 +13,16 @@ DATA_DIR = get_data_dir()
 def main():
     tickers = config['fetch']['tickers']
     days = config['fetch']['days']
+    
+    # Ensure tickers is a list
+    if isinstance(tickers, str):
+        tickers = [tickers]
 
-    data = yf.download(tickers, period='max', interval='1d')
+    # Ensure raw directory exists
+    raw_dir = DATA_DIR / 'raw'
+    raw_dir.mkdir(parents=True, exist_ok=True)
+
+    data = yf.download(tickers, period='max', interval='1d', group_by='ticker')
 
     # split each ticker into it's own file
 
@@ -25,10 +33,10 @@ def main():
             if len(df) > days + 20:
                 df = df[-(days + 20):]
 
-            TICKER_PATH = os.path.join(DATA_DIR, 'raw', f'{ticker}.csv')
+            TICKER_PATH = raw_dir / f'{ticker}.csv'
 
             df.reset_index(inplace=True)
-            df.to_csv(TICKER_PATH, index=False)
+            df.to_csv(str(TICKER_PATH), index=False)
 
 if __name__ == '__main__':
     main()

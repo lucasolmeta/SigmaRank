@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import numpy as np
 from src.utils.paths import get_yaml, get_data_dir
-from src.utils.dates import next_n_sessions
 
 config = get_yaml()
 
@@ -28,7 +27,7 @@ def main():
         data['tr_sma_10'] = data['true range'].shift(1).rolling(10).mean() # measures result, rolling mean
         
         #Effort and result ratios
-        tr_safe = data['true_range'].replace(0, np.nan)
+        tr_safe = data['true range'].replace(0, np.nan)
         data['effort_per_tr'] = data['Volume'] / tr_safe
         data['effort_per_tr_sma_10'] = data['effort_per_tr'].shift(1).rolling(10).mean() #normalize effort by 10_day_mean
 
